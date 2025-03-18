@@ -1,0 +1,251 @@
+AIM: Develop Java programs using lambda expressions and stream operations for sorting, 
+filtering, and processing large datasets efficiently.
+Objective: To develop Java programs utilizing lambda expressions and stream operations for 
+efficient sorting, filtering, and processing of large datasets, enhancing performance and code 
+readability.
+Problem 1: Write a program to sort a list of Employee objects (name, age, salary) using 
+lambda expressions.
+Code:
+import java.util.*;
+import java.util.stream.Collectors;
+class Employee {
+ private String name;
+ private int age;
+ private double salary;
+ public Employee(String name, int age, double salary) {
+ this.name = name;
+ this.age = age;
+ this.salary = salary;
+ }
+ public String getName() { return name; }
+ public int getAge() { return age; }
+ public double getSalary() { return salary; }
+ @Override
+ public String toString() {
+ return "Employee{name='" + name + "', age=" + age + ", salary=" + salary + "}";
+ }
+}
+public class EmployeeSorter {
+ public static void main(String[] args) {
+ List<Employee> employees = Arrays.asList(
+ new Employee("Alice", 30, 60000),
+ new Employee("Bob", 25, 50000),
+ new Employee("Charlie", 35, 70000),
+new Employee("David", 28, 55000)
+ );
+ // Sorting by Name (Alphabetically)
+ List<Employee> sortedByName = employees.stream()
+ .sorted(Comparator.comparing(Employee::getName))
+ .collect(Collectors.toList());
+ // Sorting by Age (Ascending)
+ List<Employee> sortedByAge = employees.stream()
+ .sorted(Comparator.comparingInt(Employee::getAge))
+ .collect(Collectors.toList());
+ // Sorting by Salary (Descending)
+ List<Employee> sortedBySalary = employees.stream()
+ .sorted(Comparator.comparingDouble(Employee::getSalary).reversed())
+ .collect(Collectors.toList());
+ // Displaying Sorted Lists
+ System.out.println("Sorted by Name: " + sortedByName);
+ System.out.println("Sorted by Age: " + sortedByAge);
+ System.out.println("Sorted by Salary (Descending): " + sortedBySalary);
+ }
+}
+Problem 2: Create a program to use lambda expressions and stream operations to filter 
+
+students scoring above 75%, sort them by marks, and display their names.
+
+Code:
+
+import java.util.*;
+
+import java.util.stream.Collectors;
+
+class Student {
+
+ private String name;
+
+ private double marks;
+
+ public Student(String name, double marks) {
+
+ this.name = name;
+
+ this.marks = marks;
+
+ }
+
+ public String getName() { return name; }
+
+ public double getMarks() { return marks; }
+
+ @Override
+
+ public String toString() {
+
+ return name + " (" + marks + "%)";
+
+ }
+
+}
+public class StudentFilter {
+
+ public static void main(String[] args) {
+
+ List<Student> students = Arrays.asList(
+
+ new Student("Alice", 80),
+
+ new Student("Bob", 70),
+
+ new Student("Charlie", 90),
+
+ new Student("David", 76),
+
+ new Student("Eve", 65)
+
+ );
+
+ // Filtering students scoring above 75% and sorting by marks (Descending)
+
+ List<String> topStudents = students.stream()
+
+ .filter(s -> s.getMarks() > 75) // Filter students scoring above 75%
+
+ .sorted(Comparator.comparingDouble(Student::getMarks).reversed()) // Sort by marks 
+
+(Descending)
+
+ .map(Student::getName) // Extract names
+
+ .collect(Collectors.toList());
+
+ // Displaying the names of top students
+
+ System.out.println("Students scoring above 75% (sorted by marks): " + topStudents);
+
+ }
+
+}
+Problem 3: Write a Java program to process a large dataset of products using streams. 
+
+Perform operations such as grouping products by category, finding the most expensive product 
+
+in each category, and calculating the average price of all products.
+
+Code:
+
+import java.util.*;
+
+import java.util.stream.Collectors;
+
+class Product {
+
+ private String name;
+
+ private String category;
+
+ private double price;
+
+ public Product(String name, String category, double price) {
+
+ this.name = name;
+
+ this.category = category;
+
+ this.price = price;
+
+ }
+
+ public String getName() { return name; }
+
+ public String getCategory() { return category; }
+
+ public double getPrice() { return price; }
+
+ @Override
+
+ public String toString() {
+return name + " ($" + price + ")";
+
+ }
+
+}
+
+public class ProductStreamProcessor {
+
+ public static void main(String[] args) {
+
+ List<Product> products = Arrays.asList(
+
+ new Product("Laptop", "Electronics", 1200.00),
+
+ new Product("Smartphone", "Electronics", 800.00),
+
+ new Product("Headphones", "Electronics", 150.00),
+
+ new Product("Shirt", "Clothing", 40.00),
+
+ new Product("Jeans", "Clothing", 60.00),
+
+ new Product("Refrigerator", "Home Appliances", 1000.00),
+
+ new Product("Microwave", "Home Appliances", 200.00),
+
+ new Product("Shoes", "Clothing", 80.00)
+
+ );
+
+ // Group products by category
+
+ Map<String, List<Product>> productsByCategory = products.stream()
+
+ .collect(Collectors.groupingBy(Product::getCategory));
+
+ // Find the most expensive product in each category
+
+ Map<String, Optional<Product>> mostExpensiveByCategory = products.stream()
+
+ .collect(Collectors.groupingBy(
+
+ Product::getCategory,
+
+ Collectors.maxBy(Comparator.comparingDouble(Product::getPrice))
+
+ ));
+
+ // Calculate the average price of all products
+
+ double averagePrice = products.stream()
+
+ .mapToDouble(Product::getPrice)
+
+ .average()
+
+ .orElse(0.0);
+
+ // Display grouped products
+
+ System.out.println("Products grouped by category:");
+
+ productsByCategory.forEach((category, productList) ->
+
+ System.out.println(category + " -> " + productList));
+
+ // Display most expensive product in each category
+
+ System.out.println("\nMost expensive product in each category:");
+
+ mostExpensiveByCategory.forEach((category, product) ->
+
+ System.out.println(category + " -> " + product.orElse(null)));
+
+ // Display average price
+
+ System.out.println("\nAverage price of all products: $" + String.format("%.2f", 
+
+averagePrice));
+
+ }
+
+}
